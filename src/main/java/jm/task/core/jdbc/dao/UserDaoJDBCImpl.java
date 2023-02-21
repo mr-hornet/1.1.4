@@ -22,9 +22,9 @@ public class UserDaoJDBCImpl implements UserDao {
                 "  age int DEFAULT NULL,\n" +
                 "  PRIMARY KEY (`id`)\n" +
                 ");";
-        try (Statement statement = connection.createStatement()) {
+        try (PreparedStatement statement = connection.prepareStatement(createTable)) {
             connection.setAutoCommit(false);
-            statement.execute(createTable);
+            statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,9 +40,9 @@ public class UserDaoJDBCImpl implements UserDao {
     public void dropUsersTable() {
         // Удаление таблицы
         String dropUsers = "drop table if exists users";
-        try (Statement statement = connection.createStatement()) {
+        try (PreparedStatement statement = connection.prepareStatement(dropUsers)) {
             connection.setAutoCommit(false);
-            statement.executeUpdate(dropUsers);
+            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             try {
@@ -62,7 +62,7 @@ public class UserDaoJDBCImpl implements UserDao {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setInt(3, age);
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -98,7 +98,7 @@ public class UserDaoJDBCImpl implements UserDao {
         // Получение всех пользователей
         List<User> list = new ArrayList<>();
         String getAll = "select * from users";
-        try (Statement statement = connection.createStatement()) {
+        try (PreparedStatement statement = connection.prepareStatement(getAll)) {
             connection.setAutoCommit(true);
             ResultSet resultSet = statement.executeQuery(getAll);
             while (resultSet.next()) {
@@ -118,9 +118,9 @@ public class UserDaoJDBCImpl implements UserDao {
     public void cleanUsersTable() {
         // Очистить таблицу
         String cleanUsers = "delete from users";
-        try (Statement statement = connection.createStatement()) {
+        try (PreparedStatement statement = connection.prepareStatement(cleanUsers)) {
             connection.setAutoCommit(false);
-            statement.execute(cleanUsers);
+            statement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
